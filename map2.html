@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src='local1-versatiles/maplibre-gl-5.7.3.js'></script>
+  <link href='local1-versatiles/maplibre-gl-5.7.3.css' rel='stylesheet' />
+  <style>
+    #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map = new maplibregl.Map({
+      container: 'map',
+    //   style: 'https://tiles.versatiles.org/assets/styles/colorful/style.json',
+      style: 'local1-versatiles/colorful_style.json',
+      center: [73.8573, 18.5128], // longitude first, latitude later
+      zoom: 12,
+      hash: true,
+      maxZoom: 20,
+      transformRequest: (url, resourceType) => {
+        if (/^local:\/\//.test(url)) {
+          return { url: new URL(url.substr('local://'.length), location.href).href };
+        }
+      },
+    });
+
+    // adding controls
+    let fullscreen = new maplibregl.FullscreenControl();
+    map.addControl(fullscreen, 'top-right');
+    
+    let nav = new maplibregl.NavigationControl({
+      // showCompass: true,
+      // showZoom: true,
+      visualizePitch: true,
+      visualizeRoll: true,
+    });
+    map.addControl(nav, 'top-left');
+
+
+    let marker = new maplibregl.Marker()
+    .setLngLat([73.8573, 18.5128])
+    .addTo(map);
+    
+    map.on('style.load', () => {
+      map.setProjection({
+        type: 'globe', // Set projection to globe
+      });
+    });
+  </script>
+</body>
+</html>

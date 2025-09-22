@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <script src='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js'></script>
-  <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
+  <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
+  <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
   <style>
     #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
   </style>
@@ -13,7 +13,7 @@
   <script>
     var map = new maplibregl.Map({
       container: 'map',
-      style: 'versatiles-styles/colorful.json',
+      style: 'https://tiles.versatiles.org/assets/styles/colorful/style.json',
       center: [73.8573, 18.5128], // longitude first, latitude later
       zoom: 12,
       hash: true,

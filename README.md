@@ -18,3 +18,30 @@ It's a very basic, no-frills map using the Maplibre JS library.
 - Solving sprites issues: Getting fixed sprite URLs that we have complete control over and can customize
 - Getting the right fonts for Indian languages that don't break apart in rendering
 - Making visible new kinds of POIs that matter to maps in India but have been sidelined in international maps 
+
+
+## map1.html 
+
+It's a very basic, no-frills map using the Maplibre JS library.
+
+References the CDNs only.
+
+
+## map2.html
+
+**Self-hosting:**
+- All the dependencies : style json, sprites json & png, glpyhs : Are localized and stored in "local1-versatiles" folder.
+- The JS, CSS are copied from the CDNs as of v5.7.3 (copied on 2025-09-22)
+- Style json: colorful_style.json is copied from https://tiles.versatiles.org/assets/styles/colorful/style.json (copied on 2025-09-22) and then some changes have been made to it
+- Got code to how to make the script work with locally sources assets using transformRequest from: https://github.com/mapbox/mapbox-gl-js/pull/9225#issuecomment-578089885
+- Added `local://./` prefix on the glyphs and sprites paths; the transformRequest function then dynamically replaces it with correct absolute url.
+- Having to do this because the lib doesn't tolerate simple local paths.
+
+**Indianizing the map:**
+- Incorporated changes documented on https://github.com/osm-in/osm-in.github.io/issues/87#issuecomment-3180638831 to hide disputed boundaries, add Indian state boundaries
+
+
+**Other features:**
+- Added navigation control including a compass button that shows the direction and tilt of the map (right-click + drag to tilt/rotate) , and resets on clicking
+- Made the map render on a globe (zoom out) using setProjection function. Source: https://maplibre.org/maplibre-gl-js/docs/examples/display-a-globe-with-a-vector-map/
+
