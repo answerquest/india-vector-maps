@@ -30,18 +30,21 @@ References the CDNs only.
 ## map2.html
 
 **Self-hosting:**
-- All the dependencies : style json, sprites json & png, glpyhs : Are localized and stored in "local1-versatiles" folder.
-- The JS, CSS are copied from the CDNs as of v5.7.3 (copied on 2025-09-22)
-- Style json: colorful_style.json is copied from https://tiles.versatiles.org/assets/styles/colorful/style.json (copied on 2025-09-22) and then some changes have been made to it
+- All the dependencies : style json, sprites json & png, glyphs : Are localized and stored in "local1-versatiles" folder, about 80MB in total, majority of it being the glyphs.
+- The JS, CSS are copied from the CDNs as of v5.7.3 (copied on 2025-09-22).
+- Glyphs sourced from https://github.com/versatiles-org/versatiles-fonts/releases : downloaded the fonts.tar.gz, and copied over folders of noto_sans_regular and noto_sans_bold.
+- Style json: colorful_style.json is copied from https://tiles.versatiles.org/assets/styles/colorful/style.json (copied on 2025-09-22) and then some changes have been made to it.
 - Got code to how to make the script work with locally sources assets using transformRequest from: https://github.com/mapbox/mapbox-gl-js/pull/9225#issuecomment-578089885
 - Added `local://./` prefix on the glyphs and sprites paths; the transformRequest function then dynamically replaces it with correct absolute url.
 - Having to do this because the lib doesn't tolerate simple local paths.
+- Sprites .png and .json sourced from path https://tiles.versatiles.org/assets/sprites/basics/sprites given in the style json (copied on 2025-09-22).
 
 **Indianizing the map:**
-- Incorporated changes documented on https://github.com/osm-in/osm-in.github.io/issues/87#issuecomment-3180638831 to hide disputed boundaries, add Indian state boundaries
+- Incorporated changes documented on https://github.com/osm-in/osm-in.github.io/issues/87#issuecomment-3180638831 to hide disputed boundaries, add Indian state boundaries.
 
 
 **Other features:**
-- Added navigation control including a compass button that shows the direction and tilt of the map (right-click + drag to tilt/rotate) , and resets on clicking
-- Made the map render on a globe (zoom out) using setProjection function. Source: https://maplibre.org/maplibre-gl-js/docs/examples/display-a-globe-with-a-vector-map/
+- Added navigation control including a compass button that shows the direction and tilt of the map (right-click + drag to tilt/rotate) , and resets on clicking.
+- Added fullscreen control button.
+- Made the map render on a globe (zoom out to see it) using setProjection function. Source: https://maplibre.org/maplibre-gl-js/docs/examples/display-a-globe-with-a-vector-map/ .
 
