@@ -8,7 +8,7 @@
 	"sprite": [
 		{
 			"id": "basics",
-			"url": "local://./local1-versatiles/assets/sprites/basics/sprites"
+			"url": "local://./local1-versatiles/assets/sprites/basics/sprites@2x"
 		}
 	],
 	"sources": {
