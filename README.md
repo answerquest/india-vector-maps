@@ -1,6 +1,32 @@
 # india-vector-maps
 
+
+## Introduction
 An open source project to pump out maps (web pages) and boilerplate code with made-for-India vector styles, thematic maps, multilingual, whatnot.
+
+This is relatively new tech; traditionally if we wanted to customize something, we had to buy heavy servers pre-rendering images as map tiles and v.complicated to setup + maintain.
+
+Now thanks to vector map tech, we can use the same common source data, but fine-tune the rendering to make our  own "flavours". You can make a map with labels in your language. You can make thematic maps that display selected places more prominently, like a map for education, or transport. All this by editing a json file! 
+
+## How to get started, for non-coders
+- Check out the pinned live map
+- Share your ideas and inputs in the Discussion section
+
+## How to get started, for coders
+- Download the repo
+- Run it on local system by starting a simple web server. Quick python way: `python3 -m http.server`
+- Open `http://localhost:8000` or the mentioned url in your browser 
+- Tinker -> Refresh browser -> Repeat
+
+## Customize style using Maputnik editor
+- Open the respective style json in this repo, like [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json)
+- Hit "RAW" to get the original raw json in your browser. Copy the URL
+- Open https://maplibre.org/maputnik/
+- Click "Open" in top menu
+- Paste in this raw url under "Load from URL" and proceed
+- You should now see the map loading on right (might take time), and on left a huge editable form with several sections
+- Make changes on left and see output on right
+- Note: it gets v.slow sometimes. Maybe loading restrictions. It's an open-source tool, so you could check out the [Maputnik repo](https://github.com/maplibre/maputnik), download and run it from your local.
 
 
 ## Some goals to shoot for
@@ -12,6 +38,8 @@ An open source project to pump out maps (web pages) and boilerplate code with ma
 - Getting the right fonts for Indian languages that don't break apart in rendering
 - Making visible new kinds of POIs that matter to maps in India but have been sidelined in international maps 
 
+
+# Map Versions Documentation
 
 ## map1.html 
 
@@ -47,3 +75,4 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 - the vector style json that controls how things are rendered: [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json) 
 - Sprites (Icons) for POIs: [local1-versatiles/assets/sprites/basics](local1-versatiles/assets/sprites/basics)
 - The map HTML and JS: [map2.html](map2.html)
+
