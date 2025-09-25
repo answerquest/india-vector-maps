@@ -43,3 +43,7 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 - Added fullscreen control button.
 - Made the map render on a globe (zoom out to see it) using setProjection function. Source: https://maplibre.org/maplibre-gl-js/docs/examples/display-a-globe-with-a-vector-map/ .
 
+**Jump links to what we can edit here:**
+- the vector style json that controls how things are rendered: [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json) 
+- Sprites (Icons) for POIs: [local1-versatiles/assets/sprites/basics](local1-versatiles/assets/sprites/basics)
+- The map HTML and JS: [map2.html](map2.html)
