@@ -56,10 +56,10 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 - The JS, CSS are copied from the CDNs as of v5.7.3 (copied on 2025-09-22).
 - Glyphs sourced from https://github.com/versatiles-org/versatiles-fonts/releases : downloaded the fonts.tar.gz, and copied over folders of noto_sans_regular and noto_sans_bold.
 - Style json: colorful_style.json is copied from https://tiles.versatiles.org/assets/styles/colorful/style.json (copied on 2025-09-22) and then some changes have been made to it.
-- Got code to how to make the script work with locally sources assets using transformRequest from: https://github.com/mapbox/mapbox-gl-js/pull/9225#issuecomment-578089885
-- Added `local://./` prefix on the glyphs and sprites paths; the transformRequest function then dynamically replaces it with correct absolute url.
-- Having to do this because the lib doesn't tolerate simple local paths.
+- When running in local, if a resource url starts with this repo's deployment url, then it is replaced by the local url so that you can run the map in local with the local sprites and glyphs loaded. This is done using `transformRequest` option in map declaration and is adapted from (but later heavily changed) https://github.com/mapbox/mapbox-gl-js/pull/9225#issuecomment-578089885
 - Sprites .png and .json sourced from path https://tiles.versatiles.org/assets/sprites/basics/sprites given in the style json (copied on 2025-09-22).
+
+**Note:** In case you're deploying this map on your own site, pls change the value of `DEPLOYED_BASEURL` in map2.html accordingly.
 
 **Indianizing the map:**
 - Incorporated changes documented on https://github.com/osm-in/osm-in.github.io/issues/87#issuecomment-3180638831 to hide disputed boundaries, add Indian state boundaries.

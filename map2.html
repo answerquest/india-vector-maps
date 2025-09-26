@@ -11,7 +11,7 @@
 <body>
   <div id="map"></div>
   <script>
-    const deployed_baseurl = 'https://answerquest.github.io/india-vector-maps';
+    const DEPLOYED_BASEURL = 'https://answerquest.github.io/india-vector-maps';
     var map = new maplibregl.Map({
       container: 'map',
       style: 'local1-versatiles/colorful_style.json',
@@ -20,8 +20,8 @@
       hash: true,
       maxZoom: 20,
       transformRequest: (url, resourceType) => {
-        if (url.startsWith(deployed_baseurl) && ! location.href.startsWith(deployed_baseurl)) {
-          const new_url = url.replace(deployed_baseurl, `${location.protocol}//${location.host}`)
+        if (url.startsWith(DEPLOYED_BASEURL) && ! location.href.startsWith(DEPLOYED_BASEURL)) {
+          const new_url = url.replace(DEPLOYED_BASEURL, `${location.protocol}//${location.host}`)
           // console.log(`Replacing ${url} with ${new_url}`);
           return { url: new_url };
         }
