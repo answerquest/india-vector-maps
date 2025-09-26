@@ -26,6 +26,8 @@ Now thanks to vector map tech, we can use the same common source data, but fine-
 - You should now see the map loading on right (might take time), and on left a huge editable form with several sections
 - Make changes on left and see output on right
 - Note: it gets v.slow sometimes. Maybe loading restrictions. It's an open-source tool, so you could check out the [Maputnik repo](https://github.com/maplibre/maputnik), download and run it from your local.
+- When you're happy with the changes, save your work as a new json file.
+- Make a new map html with that, and PR it here! (Or publish it at your side, your choice)
 
 
 ## Some goals to shoot for
