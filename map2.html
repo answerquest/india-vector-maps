@@ -11,17 +11,19 @@
 <body>
   <div id="map"></div>
   <script>
+    const deployed_baseurl = 'https://answerquest.github.io/india-vector-maps';
     var map = new maplibregl.Map({
       container: 'map',
-    //   style: 'https://tiles.versatiles.org/assets/styles/colorful/style.json',
       style: 'local1-versatiles/colorful_style.json',
       center: [73.8573, 18.5128], // longitude first, latitude later
       zoom: 12,
       hash: true,
       maxZoom: 20,
       transformRequest: (url, resourceType) => {
-        if (/^local:\/\//.test(url)) {
-          return { url: new URL(url.substr('local://'.length), location.href).href };
+        if (url.startsWith(deployed_baseurl) && ! location.href.startsWith(deployed_baseurl)) {
+          const new_url = url.replace(deployed_baseurl, `${location.protocol}//${location.host}`)
+          // console.log(`Replacing ${url} with ${new_url}`);
+          return { url: new_url };
         }
       },
     });

@@ -19,12 +19,10 @@ Now thanks to vector map tech, we can use the same common source data, but fine-
 - Tinker -> Refresh browser -> Repeat
 
 ## Customize style using Maputnik editor
-- Open the respective style json in this repo, like [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json) on your local
-- Edit it, replace `local://.` with `https://answerquest.github.io/india-vector-maps` and save it.
-- Apologies for inconvenience; this is happening dynamically in the live web-page too. It was needed to be able to use self-hosted sprites and glyphs and have it work when we run the map in local.
+- Open the respective style json in this repo, like [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json) : click "Raw" button to get the raw content in browser, and copy the browser URL 
 - Open https://maplibre.org/maputnik/
 - Click "Open" in top menu
-- Click "Open Style" button and upload your locally saved json and proceed
+- Paste the copied URL under "Load from URL" and proceed
 - You should now see the map loading on right (might take time), and on left a huge editable form with several sections
 - Make changes on left and see output on right
 - Note: it gets v.slow sometimes. Maybe loading restrictions. It's an open-source tool, so you could check out the [Maputnik repo](https://github.com/maplibre/maputnik), download and run it from your local.

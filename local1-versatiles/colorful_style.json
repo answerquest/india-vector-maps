@@ -4,11 +4,11 @@
 	"metadata": {
 		"license": "https://creativecommons.org/publicdomain/zero/1.0/"
 	},
-	"glyphs": "local://./local1-versatiles/assets/glyphs/{fontstack}/{range}.pbf",
+	"glyphs": "https://answerquest.github.io/india-vector-maps/local1-versatiles/assets/glyphs/{fontstack}/{range}.pbf",
 	"sprite": [
 		{
 			"id": "basics",
-			"url": "local://./local1-versatiles/assets/sprites/basics/sprites@2x"
+			"url": "https://answerquest.github.io/india-vector-maps/local1-versatiles/assets/sprites/basics/sprites@2x"
 		}
 	],
 	"sources": {
