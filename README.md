@@ -77,3 +77,7 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 - Sprites (Icons) for POIs: [local1-versatiles/assets/sprites/basics](local1-versatiles/assets/sprites/basics)
 - The map HTML and JS: [map2.html](map2.html)
 
+**Other info**
+- Vector tile source URL being used: `https://vector.openstreetmap.org/shortbread_v1/{z}/{x}/{y}.mvt` . It was `https://tiles.versatiles.org/tiles/osm/{z}/{x}/{y}` earlier.
+- This is specified in the style json used by the map, not in the main JS directly,
+

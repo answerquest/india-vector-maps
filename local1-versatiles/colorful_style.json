@@ -15,7 +15,7 @@
 		"versatiles-shortbread": {
 			"attribution": "© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
 			"tiles": [
-				"https://tiles.versatiles.org/tiles/osm/{z}/{x}/{y}"
+				"https://vector.openstreetmap.org/shortbread_v1/{z}/{x}/{y}.mvt"
 			],
 			"type": "vector",
 			"scheme": "xyz",
