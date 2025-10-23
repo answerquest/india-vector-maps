@@ -61,7 +61,7 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 - When running in local, if a resource url starts with this repo's deployment url, then it is replaced by the local url so that you can run the map in local with the local sprites and glyphs loaded. This is done using `transformRequest` option in map declaration and is adapted from (but later heavily changed) https://github.com/mapbox/mapbox-gl-js/pull/9225#issuecomment-578089885
 - Sprites .png and .json sourced from path https://tiles.versatiles.org/assets/sprites/basics/sprites given in the style json (copied on 2025-09-22).
 
-**Note:** In case you're deploying this map on your own site, pls change the value of `DEPLOYED_BASEURL` in map2.html accordingly.
+**Note:** In case you're deploying this map on your own site, pls change the value of `DEPLOYED_BASEURL` in map2.html and replace the same in [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json) to your hosted location accordingly.
 
 **Indianizing the map:**
 - Incorporated changes documented on https://github.com/osm-in/osm-in.github.io/issues/87#issuecomment-3180638831 to hide disputed boundaries, add Indian state boundaries.

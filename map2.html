@@ -11,21 +11,34 @@
 <body>
   <div id="map"></div>
   <script>
-    const DEPLOYED_BASEURL = 'https://answerquest.github.io/india-vector-maps';
+    var BASEURL = 'https://answerquest.github.io/india-vector-maps'; 
+    // PUT YOUR DEPLOYMENT URL HERE. The webpage's location will be {BASEURL}/map2.html
+
+    if(! location.href.startsWith(BASEURL)) {
+      // if the page is somewhere else, replace. Note this will not consider sub-paths.
+      BASEURL = `${location.protocol}//${location.host}`;
+      console.log(`BASEURL replaced with: ${BASEURL}`);
+    }
     var map = new maplibregl.Map({
       container: 'map',
-      style: 'local1-versatiles/colorful_style.json',
       center: [73.8573, 18.5128], // longitude first, latitude later
       zoom: 12,
       hash: true,
       maxZoom: 20,
-      transformRequest: (url, resourceType) => {
-        if (url.startsWith(DEPLOYED_BASEURL) && ! location.href.startsWith(DEPLOYED_BASEURL)) {
-          const new_url = url.replace(DEPLOYED_BASEURL, `${location.protocol}//${location.host}`)
-          // console.log(`Replacing ${url} with ${new_url}`);
-          return { url: new_url };
-        }
+      validateStyle: false,
+      transformRequest: (url, resourceType) => {        
+        let new_url = url.replace("BASEURL", BASEURL);
+        return { url: new_url };
       },
+    });
+
+    map.setStyle('local1-versatiles/colorful_style.json', {
+      transformStyle: (previousStyle, nextStyle) => {
+        nextStyle.sprite.forEach(s => {
+          s.url = s.url.replace("BASEURL", BASEURL);
+        });
+        return nextStyle;
+      }
     });
 
     // adding controls
