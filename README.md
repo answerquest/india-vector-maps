@@ -1,5 +1,6 @@
 # india-vector-maps
 
+Latest live map: https://answerquest.github.io/india-vector-maps/map3.html
 
 ## Introduction
 An open source project to pump out maps (web pages) and boilerplate code with made-for-India vector styles, thematic maps, multilingual, whatnot.
