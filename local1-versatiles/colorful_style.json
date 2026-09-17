@@ -24,13 +24,13 @@
 			"maxzoom": 14
 		},
 		"bhuvan-states": {
-			"attribution": "Bhuvan Panchayat",
+			"attribution": "Bhuvan States / indianopenmaps.com",
 			"type": "vector",
 			"tiles": [
-			  "https://indianopenmaps.fly.dev/not-so-open/states/bhuvan/{z}/{x}/{y}.pbf "
+			  "https://indianopenmaps.com/not-so-open/states/bhuvan/{z}/{x}/{y}.pbf "
 			],
 			"minzoom": 0,
-			"maxzoom": 14,
+			"maxzoom": 9,
 			"scheme": "xyz"
 		  }
 	},
@@ -4033,7 +4033,8 @@
 			},
 			"layout": {
 				"line-cap": "round",
-				"line-join": "round"
+				"line-join": "round",
+				"visibility": "none"
 			}
 		},
 		{
@@ -4079,7 +4080,8 @@
 			},
 			"layout": {
 				"line-cap": "round",
-				"line-join": "round"
+				"line-join": "round",
+				"visibility": "none"
 			}
 		},
 		{
@@ -4087,7 +4089,10 @@
 			"type": "line",
 			"source": "bhuvan-states",
 			"source-layer": "bhuvan_states",
-			"paint": {"line-color": "rgba(210, 210, 210, 1)"}
+			"paint": {
+				"line-color": "rgb(128, 128, 128)",
+				"line-width": { "stops": [ [ 4, 1.5 ], [ 8, 3 ], [ 12, 5 ], [ 16, 8 ], [ 20, 12 ] ] }
+			}
 		},
 		{
 			"source": "versatiles-shortbread",

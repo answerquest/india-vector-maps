@@ -81,3 +81,40 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 - Vector tile source URL being used: `https://vector.openstreetmap.org/shortbread_v1/{z}/{x}/{y}.mvt` . It was `https://tiles.versatiles.org/tiles/osm/{z}/{x}/{y}` earlier.
 - This is specified in the style json used by the map, not in the main JS directly,
 
+
+## map3.html
+
+An upgrade of map2.html to Maplibre GL JS v6.10.0. The map features, controls, globe projection and the style json are the same as map2.html; the changes are the library's major-version breaking changes, plus a few state-boundary rendering fixes.
+
+**Upgrading the library from v5.7.3 to v6.10.0 (breaking changes):**
+- v6 is ESM-only: the old UMD `maplibre-gl.js` script bundle no longer exists. The library is loaded as a module instead: `<script type="module">` with `import * as maplibregl from './maplibre-gl-6.10.0/maplibre-gl-6.10.0.mjs'`. The namespace import (`import * as maplibregl`) replaces the earlier default import.
+- v6 requires WebGL2; WebGL1 support has been removed. Older browsers/devices without WebGL2 will fail on `new maplibregl.Map(...)`.
+- The rest of the map code (`new Map({...})`, `setStyle(..., {transformStyle})`, `transformRequest`, `FullscreenControl`, `NavigationControl`, `Marker`, `style.load` + `setProjection({type: 'globe'})`) is unchanged and still valid in v6.
+- Relative paths in the style json (sprite / glyphs / sources) are still not supported natively, so the existing `transformRequest` / `transformStyle` BASEURL rewrite continues to be used.
+- Migration reference: https://github.com/maplibre/maplibre-gl-js/blob/main/docs/guides/v5-to-v6-migration-guide.md
+
+**Self-hosting:**
+- The Maplibre library files are now kept in dedicated per-version folders instead of inside `local1-versatiles`:
+  - [maplibre-gl-5.7.3](maplibre-gl-5.7.3) : the JS and CSS used by map2.html.
+  - [maplibre-gl-6.10.0](maplibre-gl-6.10.0) : `maplibre-gl-6.10.0.mjs` and `maplibre-gl-6.10.0.css`, plus `maplibre-gl-shared.mjs` (shared code chunk) and `maplibre-gl-worker.mjs` (web worker) which the v6 ESM bundle loads at runtime.
+- The v6 module resolves its worker and shared chunk relative to itself (via `new URL('./maplibre-gl-worker.mjs', import.meta.url)`), so those two files must stay in the same folder as the `.mjs`.
+- `local1-versatiles` now holds only the versatiles data : style json, sprites, glyphs.
+
+**Indianizing the map (style json refinements):**
+- The `bhuvan-states` source `maxzoom` is set to 9, its actual native maximum zoom. 
+- But the data from there is fetched and rendered on map all the way to map's max zoom. 
+- The boundary lines were made more prominent.
+- The versatiles-shortbread state-level boundary layers (`boundary-state:outline` and `boundary-state`) are hidden with `"visibility": "none"`, so only the `bhuvan-states` boundaries are shown for states. Country-level boundaries are unaffected.
+
+**Overzoom fix (v6-specific):**
+- v6 added an experimental `zoomLevelsToOverscale` option (default 4). For vector sources it fetches native tiles up to `max(map.maxZoom - 4, source.maxzoom)`, so a source with `maxzoom: 9` kept requesting non-existent z10–z16 tiles, making the boundaries disappear as soon as the map zoom went beyond 9.
+- Setting `zoomLevelsToOverscale: undefined` in the Map options restores the v5 behavior: fetch only up to `source.maxzoom` (9), then overzoom those tiles up to the map's max zoom (20).
+
+**Note:** In case you're deploying this map on your own site, pls change the value of `BASEURL` in map3.html to your hosted location accordingly.
+
+**Jump links to what we can edit here:**
+- the vector style json that controls how things are rendered: [local1-versatiles/colorful_style.json](local1-versatiles/colorful_style.json)
+- Sprites (Icons) for POIs: [local1-versatiles/assets/sprites/basics](local1-versatiles/assets/sprites/basics)
+- The map HTML and JS: [map3.html](map3.html)
+- The Maplibre v6 library files: [maplibre-gl-6.10.0](maplibre-gl-6.10.0)
+

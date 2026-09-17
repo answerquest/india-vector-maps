@@ -2,17 +2,19 @@
 <html>
 <head>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <script src='maplibre-gl-5.7.3/maplibre-gl-5.7.3.js'></script>
-  <link href='maplibre-gl-5.7.3/maplibre-gl-5.7.3.css' rel='stylesheet' />
+  <link href='maplibre-gl-6.10.0/maplibre-gl-6.10.0.css' rel='stylesheet' />
   <style>
     #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
   </style>
 </head>
 <body>
   <div id="map"></div>
-  <script>
-    var BASEURL = 'https://answerquest.github.io/india-vector-maps'; 
-    // PUT YOUR DEPLOYMENT URL HERE. The webpage's location will be {BASEURL}/map2.html
+  <script type="module">
+    // v6 is ESM-only: import the module instead of loading a UMD script.
+    import * as maplibregl from './maplibre-gl-6.10.0/maplibre-gl-6.10.0.mjs';
+
+    var BASEURL = 'https://answerquest.github.io/india-vector-maps';
+    // PUT YOUR DEPLOYMENT URL HERE. The webpage's location will be {BASEURL}/map3.html
 
     if(! location.href.startsWith(BASEURL)) {
       // if the page is somewhere else, replace. Note this will not consider sub-paths.
@@ -26,7 +28,8 @@
       hash: true,
       maxZoom: 20,
       validateStyle: false,
-      transformRequest: (url, resourceType) => {        
+      zoomLevelsToOverscale: undefined,
+      transformRequest: (url, resourceType) => {
         let new_url = url.replace("BASEURL", BASEURL);
         return { url: new_url };
       },
@@ -44,7 +47,7 @@
     // adding controls
     let fullscreen = new maplibregl.FullscreenControl();
     map.addControl(fullscreen, 'top-right');
-    
+
     let nav = new maplibregl.NavigationControl({
       // showCompass: true,
       // showZoom: true,
@@ -57,7 +60,7 @@
     let marker = new maplibregl.Marker()
     .setLngLat([73.8573, 18.5128])
     .addTo(map);
-    
+
     map.on('style.load', () => {
       map.setProjection({
         type: 'globe', // Set projection to globe
