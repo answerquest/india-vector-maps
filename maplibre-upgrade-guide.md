@@ -11,12 +11,12 @@ From the official [v5-to-v6 migration guide](https://github.com/maplibre/maplibr
    - `<script src="...maplibre-gl.js">` → must become:
      ```html
      <script type="module">
-       import * as maplibregl from 'https://unpkg.com/maplibre-gl@^6.10.0/dist/maplibre-gl.mjs';
+       import * as maplibregl from 'https://unpkg.com/maplibre-gl@^6.14.0/dist/maplibre-gl.mjs';
        // ... your code using maplibregl
      </script>
      ```
    - Default import (`import maplibregl from 'maplibre-gl'`) → `import * as maplibregl from 'maplibre-gl'` (or named imports).  
-   - Pin a version (e.g. `^6.10.0`); `@latest` can break silently across majors.  
+   - Pin a version (e.g. `^6.14.0`); `@latest` can break silently across majors.  
    - Bundlers often still need a one-time `setWorkerUrl(...)` (see docs for Vite/webpack/etc.). CDN `<script type="module">` usually auto-detects the worker.
 
 2. **WebGL2 required**  
@@ -37,7 +37,7 @@ From the official [v5-to-v6 migration guide](https://github.com/maplibre/maplibr
    - Experimental `zoomLevelsToOverscale` default changed (can set to `undefined` to restore old overscaling behavior).  
    - Icon scaling with offset disabled (render change).  
    - Light position interpolation, hash parsing edge cases, etc. — unlikely to affect a basic 2D vector map.  
-   - Later 6.x releases (up to 6.10.0) are mostly features/fixes (sky in globe, performance, terrain/marker occlusion, complex-script text without RTL plugin, etc.). No further major API breaks for your pattern.
+   - Later 6.x releases (up to 6.14.0) are mostly features/fixes (sky in globe, performance, terrain/marker occlusion, complex-script text without RTL plugin, etc.). No further major API breaks for your pattern.
 
 Your sample code’s core pieces (`new Map({container, center, zoom, hash, maxZoom, validateStyle, transformRequest})`, `map.setStyle(..., {transformStyle})`, `FullscreenControl` / `NavigationControl`, `Marker`, `style.load` + `setProjection({type: 'globe'})`) remain valid. Globe projection and the controls continue to work; the map itself is still fine as a 2D/mercator-or-globe viewer without terrain.
 
@@ -59,4 +59,4 @@ Your existing `transformRequest` + `transformStyle` that replace `"BASEURL"` wil
 4. Test WebGL2 availability and the globe projection if you rely on it.  
 5. If you use a bundler, add the `setWorkerUrl` call once.
 
-After those, the rest of the code should run essentially unchanged on 6.10.0. Full details are in the [migration guide](https://github.com/maplibre/maplibre-gl-js/blob/main/docs/guides/v5-to-v6-migration-guide.md) and the 6.0.0 + later CHANGELOG entries.
+After those, the rest of the code should run essentially unchanged on 6.14.0. Full details are in the [migration guide](https://github.com/maplibre/maplibre-gl-js/blob/main/docs/guides/v5-to-v6-migration-guide.md) and the 6.0.0 + later CHANGELOG entries.

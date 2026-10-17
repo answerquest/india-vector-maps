@@ -1,1 +1,5 @@
 *.tar.gz
+
+# Generated vector tile archives are ~200 MB; build them locally instead.
+# See the "Vector tiles self-hosting" section in README.md.
+india.pmtiles

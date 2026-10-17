@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link href='maplibre-gl-6.14.0/maplibre-gl.css' rel='stylesheet' />
+  <script src='pmtiles-4.5.0/pmtiles.js'></script>
+  <style>
+    #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script type="module">
+    // v6 is ESM-only: import the module instead of loading a UMD script.
+    import * as maplibregl from './maplibre-gl-6.14.0/maplibre-gl.mjs';
+
+    // Register the pmtiles:// protocol so MapLibre can read .pmtiles archives.
+    const protocol = new pmtiles.Protocol({ metadata: false });
+    maplibregl.addProtocol('pmtiles', protocol.tile);
+
+    // This folder (map4/) is self-contained: copy it as-is to your web host.
+    var BASEURL = 'https://answerquest.github.io/india-vector-maps/map4';
+    // PUT YOUR DEPLOYMENT URL HERE. The webpage's location will be {BASEURL}/map4.html
+
+    if(! location.href.startsWith(BASEURL)) {
+      // if the page is somewhere else, replace with this page's own folder
+      // (works for any sub-path, e.g. http://localhost:8000/map4/map4.html)
+      BASEURL = new URL('.', location.href).href.replace(/\/$/, '');
+      console.log(`BASEURL replaced with: ${BASEURL}`);
+    }
+
+    // ---- EDIT ME: public https URL of the generated .pmtiles file ----
+    const PMTILES_URL = `https://server.nikhilvj.co.in/india.pmtiles`;
+    // e.g. 'https://cdn.example.com/tiles/india.pmtiles'
+
+    const STYLE_URL = 'local1-versatiles/colorful_style_pmtiles.json';
+
+    // Fetch the style so we can point its pmtiles source at the URL above.
+    const style = await (await fetch(STYLE_URL)).json();
+    style.sources['india-pmtiles'].url = `pmtiles://${PMTILES_URL}`;
+    style.glyphs = style.glyphs.replace('BASEURL', BASEURL);
+    style.sprite.forEach(s => {
+      s.url = s.url.replace('BASEURL', BASEURL);
+    });
+
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: style,
+      center: [73.8573, 18.5128], // longitude first, latitude later
+      zoom: 12,
+      hash: true,
+      maxZoom: 20,
+      validateStyle: false,
+      zoomLevelsToOverscale: undefined,
+    });
+
+    // adding controls
+    let fullscreen = new maplibregl.FullscreenControl();
+    map.addControl(fullscreen, 'top-right');
+
+    let nav = new maplibregl.NavigationControl({
+      // showCompass: true,
+      // showZoom: true,
+      visualizePitch: true,
+      visualizeRoll: true,
+    });
+    map.addControl(nav, 'top-left');
+
+
+    let marker = new maplibregl.Marker()
+    .setLngLat([73.8573, 18.5128])
+    .addTo(map);
+
+    map.on('style.load', () => {
+      map.setProjection({
+        type: 'globe', // Set projection to globe
+      });
+    });
+  </script>
+</body>
+</html>
