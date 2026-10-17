@@ -15,7 +15,7 @@ OSM_URL="https://download.geofabrik.de/asia/india-latest.osm.pbf"
 OUTPUT_DIR="tiles"
 
 # Output format: "pbf" (directory of z/x/y.pbf tiles), "mbtiles", or "pmtiles"
-OUTPUT_FORMAT="pmtiles"
+OUTPUT_FORMAT="pbf"
 
 # Base filename for single-file formats (.mbtiles / .pmtiles), created in the
 # current folder. Existing files are overwritten. Ignored when OUTPUT_FORMAT="pbf".

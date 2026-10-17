@@ -1,5 +1,8 @@
 # india-vector-maps
 
+Live demo: [https://answerquest.github.io/india-vector-maps/map3/map3.html](https://answerquest.github.io/india-vector-maps/map3/map3.html)
+
+![map3.html — MapLibre vector map of India with globe projection](img/map3.png)
 
 ## Introduction
 An open source project to pump out maps (web pages) and boilerplate code with made-for-India vector styles, thematic maps, multilingual, whatnot.
@@ -38,23 +41,22 @@ india-vector-maps/
 │   └── local1-versatiles/         # style json, sprites, glyphs (~78 MB, mostly glyphs)
 ├── map3/
 │   ├── map3.html
-│   ├── maplibre-gl-6.10.0/        # .mjs + .css + shared chunk + worker
+│   ├── maplibre-gl-6.14.0/        # .mjs + .css + worker
 │   └── local1-versatiles/
 ├── map4/
 │   ├── map4.html
-│   ├── maplibre-gl-6.10.0/
+│   ├── maplibre-gl-6.14.0/
 │   ├── local1-versatiles/         # includes colorful_style_pmtiles.json
 │   └── pmtiles-4.5.0/             # PMTiles JS library
-├── maplibre-gl-5.7.3/             # original shared copy (also inside map2/)
-├── maplibre-gl-6.10.0/            # original shared copy (also inside map3/ and map4/)
-├── pmtiles-4.5.0/                 # original shared copy (also inside map4/)
-├── local1-versatiles/             # original shared copy (also inside map2/, map3/ and map4/)
-├── vector-tiles/                  # PMTiles archive + generator script (served separately, see Vector tiles self-hosting)
+├── local1-versatiles/             # original shared data copy (also inside map2/, map3/ and map4/)
+├── vector-tiles/                  # generator script for tiles; generated .pmtiles archives are gitignored
+├── img/                           # screenshots used in this README
 ├── maplibre-upgrade-guide.md
+├── AGENTS.md
 └── README.md
 ```
 
-The folders at the repo root are the **originals** and are kept as-is. Each map page loads only the copies that sit inside its own folder (via paths relative to `map{N}/map{N}.html`), so the root copies are reference material and do not affect the maps. The same libraries and the same `local1-versatiles` data therefore appear several times; that is intentional: it keeps each map folder deployable on its own. If you edit a style json or sprite, copy the change across the folders you care about (or deploy only the folder you edited).
+Each map page loads only the copies that sit inside its own folder (via paths relative to `map{N}/map{N}.html`). The Maplibre and PMTiles libraries live only inside the map folders that use them; the root `local1-versatiles/` is kept as the original reference copy of the shared style, sprite and glyph data. Because that data is duplicated across `map2/`, `map3/` and `map4/`, editing a style json or sprite in one folder does not affect the others — copy the change across the folders you care about (or deploy only the folder you edited).
 
 ## Customize style using Maputnik editor
 - Open the respective style json in this repo, like [map2/local1-versatiles/colorful_style.json](map2/local1-versatiles/colorful_style.json) : click "Raw" button to get the raw content in browser, and copy the browser URL 
@@ -129,21 +131,25 @@ DISCLAIMER: This map has zero intervention for Indianization done on it; hence a
 
 ## map3/ — `map3.html`
 
-An upgrade of map2.html to Maplibre GL JS v6.10.0. The map features, controls, globe projection and the style json are the same as map2.html; the changes are the library's major-version breaking changes, plus a few state-boundary rendering fixes.
+An upgrade of map2.html to Maplibre GL JS v6.14.0. The map features, controls, globe projection and the style json are the same as map2.html; the changes are the library's major-version breaking changes, plus a few state-boundary rendering fixes.
 
-**What to copy:** the whole [map3](map3) folder — `map3.html` plus `maplibre-gl-6.10.0/` and `local1-versatiles/` (about 80 MB in total). Nothing outside `map3/` is needed.
+**What to copy:** the whole [map3](map3) folder — `map3.html` plus `maplibre-gl-6.14.0/` and `local1-versatiles/` (about 80 MB in total). Nothing outside `map3/` is needed.
 
-**Upgrading the library from v5.7.3 to v6.10.0 (breaking changes):**
-- v6 is ESM-only: the old UMD `maplibre-gl.js` script bundle no longer exists. The library is loaded as a module instead: `<script type="module">` with `import * as maplibregl from './maplibre-gl-6.10.0/maplibre-gl-6.10.0.mjs'`. The namespace import (`import * as maplibregl`) replaces the earlier default import.
+**Upgrading the library from v5.7.3 to v6.14.0 (breaking changes):**
+- v6 is ESM-only: the old UMD `maplibre-gl.js` script bundle no longer exists. The library is loaded as a module instead: `<script type="module">` with `import * as maplibregl from './maplibre-gl-6.14.0/maplibre-gl.mjs'`. The namespace import (`import * as maplibregl`) replaces the earlier default import.
 - v6 requires WebGL2; WebGL1 support has been removed. Older browsers/devices without WebGL2 will fail on `new maplibregl.Map(...)`.
 - The rest of the map code (`new Map({...})`, `setStyle(..., {transformStyle})`, `transformRequest`, `FullscreenControl`, `NavigationControl`, `Marker`, `style.load` + `setProjection({type: 'globe'})`) is unchanged and still valid in v6.
 - Relative paths in the style json (sprite / glyphs / sources) are still not supported natively, so the existing `transformRequest` / `transformStyle` BASEURL rewrite continues to be used.
+- Moving from 6.10.0 to 6.14.0 needed no JS/API changes — the same calls (`new Map`, `setStyle` with `transformStyle`, `transformRequest`, controls, `setProjection`, `zoomLevelsToOverscale`) remain valid. The practical differences are the dist file names:
+  - the files now use the upstream names (`maplibre-gl.mjs`, `maplibre-gl.css`), so the pages import `./maplibre-gl-6.14.0/maplibre-gl.mjs` and link `maplibre-gl-6.14.0/maplibre-gl.css`;
+  - 6.14.0 no longer emits a separate shared code chunk: `maplibre-gl-shared.mjs` is an empty file and its code is inlined into `maplibre-gl.mjs` (which is correspondingly larger), so only the main module, CSS and worker are shipped in each map folder;
+  - the worker is still a separate file (`maplibre-gl-worker.mjs`), and 6.14.0 requests it as `./maplibre-gl-worker.mjs?v=6.14.0` next to the module.
 - Migration reference: https://github.com/maplibre/maplibre-gl-js/blob/main/docs/guides/v5-to-v6-migration-guide.md
 
 **Self-hosting:**
 - The Maplibre library files are kept inside this map's own folder, so `map3/` is self-contained:
-  - [map3/maplibre-gl-6.10.0](map3/maplibre-gl-6.10.0) : `maplibre-gl-6.10.0.mjs` and `maplibre-gl-6.10.0.css`, plus `maplibre-gl-shared.mjs` (shared code chunk) and `maplibre-gl-worker.mjs` (web worker) which the v6 ESM bundle loads at runtime.
-- The v6 module resolves its worker and shared chunk relative to itself (via `new URL('./maplibre-gl-worker.mjs', import.meta.url)`), so those two files must stay in the same folder as the `.mjs`.
+  - [map3/maplibre-gl-6.14.0](map3/maplibre-gl-6.14.0) : `maplibre-gl.mjs` and `maplibre-gl.css`, plus `maplibre-gl-worker.mjs` (web worker) which the v6 ESM bundle loads at runtime.
+- The v6 module resolves its worker relative to itself (via `new URL('./maplibre-gl-worker.mjs', import.meta.url)`), so the worker must stay in the same folder as the `.mjs`.
 - `map3/local1-versatiles` holds the versatiles data : style json, sprites, glyphs.
 - (map2.html keeps its own copy of the v5 library in `map2/maplibre-gl-5.7.3`.)
 
@@ -163,21 +169,27 @@ An upgrade of map2.html to Maplibre GL JS v6.10.0. The map features, controls, g
 - the vector style json that controls how things are rendered: [map3/local1-versatiles/colorful_style.json](map3/local1-versatiles/colorful_style.json)
 - Sprites (Icons) for POIs: [map3/local1-versatiles/assets/sprites/basics](map3/local1-versatiles/assets/sprites/basics)
 - The map HTML and JS: [map3/map3.html](map3/map3.html)
-- The Maplibre v6 library files: [map3/maplibre-gl-6.10.0](map3/maplibre-gl-6.10.0)
+- The Maplibre v6 library files: [map3/maplibre-gl-6.14.0](map3/maplibre-gl-6.14.0)
 
 
 ## map4/ — `map4.html`
 
 An evolution of map3.html where the vector tiles are served from a **single self-hosted [PMTiles](https://docs.protomaps.com/pmtiles/) archive** instead of the versatiles/osm tile server. This makes the whole map self-contained: one `.pmtiles` file can be dropped on any static host and served over plain HTTP.
 
-**What to copy:** the whole [map4](map4) folder — `map4.html` plus `maplibre-gl-6.10.0/`, `local1-versatiles/` and `pmtiles-4.5.0/` (about 80 MB in total). The `.pmtiles` archive itself is **not** inside the folder; it is served separately from [vector-tiles](vector-tiles) (or any host) — see [Vector tiles self-hosting](#vector-tiles-self-hosting).
+**Disclaimer:**
+- This iteration is an attempt at complete self-hosting including the background tiles source
+- But we're not completely out of the woods on this, and this method may be unfeasible for most folks
+- Especially if you want to display a map of the whole world and don't want to restrict yourself to a specific region, maintaining the vector tiles source for the whole planet is difficult and resource-heavy.
+- So, unless you have the apetite for it, advise to stick to using map3.html which is a good mid-way compromise with the background vector tile source still coming from a 3rd party source, but everything else needed down to the fonts and sprites being self-hosted.
+
+**What to copy:** the whole [map4](map4) folder — `map4.html` plus `maplibre-gl-6.14.0/`, `local1-versatiles/` and `pmtiles-4.5.0/` (about 80 MB in total). The `.pmtiles` archive itself is **not** inside the folder and is **not** committed to this repo (`india.pmtiles` is gitignored because of its size); build it with [vector-tiles/generate-vector-tiles.sh](vector-tiles/generate-vector-tiles.sh) and serve it from any host — see [Vector tiles self-hosting](#vector-tiles-self-hosting).
 
 **How PMTiles is wired in:**
 - The [PMTiles JS library](map4/pmtiles-4.5.0/pmtiles.js) is loaded with a plain `<script>` tag before the module.
 - A `pmtiles://` protocol handler is registered with MapLibre: `new pmtiles.Protocol()` + `maplibregl.addProtocol('pmtiles', protocol.tile)`. MapLibre then reads the archive through this handler.
 - The style json [map4/local1-versatiles/colorful_style_pmtiles.json](map4/local1-versatiles/colorful_style_pmtiles.json) defines the `india-pmtiles` vector source with a placeholder `pmtiles://https://example.com/india.pmtiles` URL.
 - At runtime map4.html overwrites that URL with `PMTILES_URL` (set near the top of the script). Point it at your public `.pmtiles` file, e.g. `https://server.nikhilvj.co.in/india.pmtiles`.
-- The archive in [vector-tiles/india.pmtiles](vector-tiles/india.pmtiles) was generated with [vector-tiles/generate-vector-tiles.sh](vector-tiles/generate-vector-tiles.sh), which also attempts to optimize it by clustering via the `pmtiles` CLI (see the known issue in [Vector tiles self-hosting](#vector-tiles-self-hosting)).
+- The live archive was generated with [vector-tiles/generate-vector-tiles.sh](vector-tiles/generate-vector-tiles.sh), which also attempts to optimize it by clustering via the `pmtiles` CLI (see the known issue in [Vector tiles self-hosting](#vector-tiles-self-hosting)). The archive itself is not committed to the repo — `india.pmtiles` is gitignored.
 - Everything else (BASEURL substitution for glyphs/sprites, globe projection, controls) is the same as map3.html.
 
 **Note:** In case you're deploying this map on your own site, pls change the value of `BASEURL` and `PMTILES_URL` in [map4.html](map4/map4.html) to your hosted locations accordingly.
@@ -187,7 +199,7 @@ An evolution of map3.html where the vector tiles are served from a **single self
 - Sprites (Icons) for POIs: [map4/local1-versatiles/assets/sprites/basics](map4/local1-versatiles/assets/sprites/basics)
 - The map HTML and JS: [map4/map4.html](map4/map4.html)
 - The PMTiles library: [map4/pmtiles-4.5.0](map4/pmtiles-4.5.0)
-- The `.pmtiles` archive and generator script: [vector-tiles](vector-tiles)
+- The generator script for the `.pmtiles` archive: [vector-tiles/generate-vector-tiles.sh](vector-tiles/generate-vector-tiles.sh)
 
 
 # Vector tiles self-hosting
@@ -201,10 +213,10 @@ Run the script from inside the `vector-tiles/` folder — it writes its download
 1. **Downloads / updates the OSM extract.** `india.pbf` from Geofabrik (`OSM_URL`), resumable and multi-connection via aria2c. If a local `india.pbf` is already at least as new as the server's `Last-Modified` timestamp, the download is skipped.
 2. **Optionally downloads extra shapefiles** (`DOWNLOAD_EXTRA_DATA="yes"`): coastline water polygons from OSMData, plus Natural Earth urban areas, glaciers and Antarctic ice shelves. tilemaker uses these to render water / landcover at low zoom levels. They are cached in `coastline/` and `landcover/`, so they are downloaded only once.
 3. **Runs tilemaker in Docker** (`ghcr.io/systemed/tilemaker:master`) against the OpenMapTiles profile (`config-openmaptiles.json` + `process-openmaptiles.lua`). The container is capped by `CPUS` and `MAX_RAM`, tilemaker is given `THREADS`, and setting `STORE_DIR` makes it use an on-disk store instead of keeping everything in RAM (useful for big extracts).
-4. **Writes the tiles** in the format selected by `OUTPUT_FORMAT`.
-5. **Optionally optimizes a `.pmtiles` archive** by running `pmtiles cluster`, using a native `pmtiles` binary if present and the `protomaps/go-pmtiles` Docker image otherwise. Only applies when `OUTPUT_FORMAT="pmtiles"` and `OPTIMIZE_PMTILES="yes"`.
+4. **Writes the tiles** in the format selected by `OUTPUT_FORMAT` (default `pbf` — a folder of z/x/y tiles).
+5. **Optionally optimizes a `.pmtiles` archive** by running `pmtiles cluster` inside the `protomaps/go-pmtiles` Docker image (`PMTILES_DOCKER_IMAGE`). Only applies when `OUTPUT_FORMAT="pmtiles"` and `OPTIMIZE_PMTILES="yes"`.
 
-**Prerequisites:** Docker (for tilemaker, and for the pmtiles CLI if no native binary), `aria2c` for the downloads, and any one of `unzip` / `7z` / `7za` / `bsdtar` / `python3` for the extra shapefiles.
+**Prerequisites:** Docker (for tilemaker and for the pmtiles CLI), `aria2c` for the downloads, and any one of `unzip` / `7z` / `7za` / `bsdtar` / `python3` for the extra shapefiles.
 
 ### Configuration knobs (top of the script)
 
@@ -212,7 +224,7 @@ Run the script from inside the `vector-tiles/` folder — it writes its download
 | --- | --- | --- |
 | `OSM_URL` | Geofabrik `india-latest.osm.pbf` | Extract to download |
 | `OSM_PBF` | `india.pbf` | Local filename for the extract |
-| `OUTPUT_FORMAT` | `pmtiles` | `pbf`, `mbtiles` or `pmtiles` — see below |
+| `OUTPUT_FORMAT` | `pbf` | `pbf`, `mbtiles` or `pmtiles` — see below |
 | `OUTPUT_DIR` | `tiles` | Output folder, only for `pbf` |
 | `OUTPUT_NAME` | `india` | Base name of the single-file outputs |
 | `CPUS` | `14` | Hard CPU limit for the tilemaker container |
@@ -226,11 +238,11 @@ Run the script from inside the `vector-tiles/` folder — it writes its download
 
 ## Output options
 
-`OUTPUT_FORMAT` picks one of three shapes for the generated tiles. They hold the same data; the difference is how you serve and consume them.
+`OUTPUT_FORMAT` picks one of three shapes for the generated tiles; it defaults to `pbf`. They hold the same data; the difference is how you serve and consume them.
 
 ### `pbf` — a folder of z/x/y tiles
 
-- `OUTPUT_FORMAT="pbf"` writes `{z}/{x}/{y}.pbf` files into `OUTPUT_DIR` (default `tiles/`), e.g. `tiles/5/18/11.pbf`.
+- `OUTPUT_FORMAT="pbf"` (the default) writes `{z}/{x}/{y}.pbf` files into `OUTPUT_DIR` (default `tiles/`), e.g. `tiles/5/18/11.pbf`.
 - It is just a directory tree of static files: any static file server or CDN can serve it, and every tile is cached on its own. Good for debugging individual tiles and for setups that front the tiles with a cache.
 - Serve it locally with `python3 -m http.server 8000 --directory tiles` (or `npx serve tiles`) and point MapLibre straight at it:
 
@@ -258,7 +270,7 @@ docker run --rm -v "$(pwd)":/data -p 8080:8080 maptiler/tileserver-gl india.mbti
 
 ### `pmtiles` — one archive the browser reads directly
 
-- `OUTPUT_FORMAT="pmtiles"` writes `OUTPUT_NAME.pmtiles` (default `india.pmtiles`) in the current folder. This is the format map4.html uses, and the archive in [vector-tiles/india.pmtiles](vector-tiles/india.pmtiles) is one such output.
+- `OUTPUT_FORMAT="pmtiles"` writes `OUTPUT_NAME.pmtiles` (default `india.pmtiles`) in the current folder. This is the format map4.html uses. It has been generated using the above script and then hosted on a separate server.
 - A PMTiles client fetches individual tiles out of the archive with HTTP `Range` requests, so in principle you **can** just drop the `.pmtiles` file on any static host and point `PMTILES_URL` at it.
 - **But be careful with bandwidth:** this is one large file (~200 MB for the India extract), and the client keeps making small range requests against it. If a server ignores `Range` and answers `200 OK` with the whole file, or if the `206 Partial Content` responses are not cached, the same large payload can be re-downloaded again and again — on every visit, by every client, and by any crawler or chat/link preview that happens to touch the URL. On a metered host that turns into real cost for no visible benefit. That is why the server setup below is strongly advised.
 
@@ -268,47 +280,86 @@ docker run --rm -v "$(pwd)":/data -p 8080:8080 maptiler/tileserver-gl india.mbti
 const PMTILES_URL = `https://your.domain.com/india.pmtiles`;
 ```
 
-The archive does not have to live next to the page. The repo keeps it in [vector-tiles/india.pmtiles](vector-tiles/india.pmtiles) and points at it with a full URL, so only `map4/` needs to be copied to deploy the page. If you do want a fully self-contained offline copy, put `india.pmtiles` inside `map4/` and set `PMTILES_URL = 'india.pmtiles'` (a relative path resolves against the page) — but note that many static hosts (e.g. GitHub Pages, 100 MB per file) will reject a file that size, so keep it off the repo-backed deployment.
+#### Recommended server setup for PMTiles (Range + CORS)
 
-#### Recommended server setup (Range + CORS)
-
-- PMTiles clients read the archive with HTTP **Range requests** (to fetch individual tiles), so the host must support `Range` and return `206 Partial Content`. Most static servers (including Caddy's `file_server`) do this.
-- Because the `.pmtiles` file is typically served from a **different origin** than the map page, the host must also send **CORS headers**, otherwise the fetch fails with a CORS error. The response headers (including `Content-Range`) must be exposed to the browser.
-- With [Caddy](https://caddyserver.com/) this is done with the `header` directive plus a `respond` for preflight `OPTIONS`:
+- PMTiles reads the archive with **byte-range requests** (the first is `Range: bytes=0-16383`, covering the header and root directory; after that, one small range per tile), so the host must answer with `206 Partial Content` and a `Content-Range` header. Caddy's `file_server` does this.
+- The archive is usually served from a **different origin** than the map page, so the host must also send **CORS headers** and expose `Content-Range`, `ETag` and `Accept-Ranges`, otherwise the browser rejects the responses.
+- With [Caddy](https://caddyserver.com/), the block below scopes all of this to `/india.pmtiles` only (via `handle`), leaving the rest of the site untouched:
+  - `header` adds the CORS headers, `Accept-Ranges: bytes` and a one-day `Cache-Control` to every response of that route, including the `206`s. The short max-age means a regenerated `india.pmtiles` is picked up within a day;
+  - `@options` answers CORS preflight `OPTIONS` requests with `204`, so clients that send a non-safelisted header (such as `If-Match`, which is allowed above) and older browsers that don't treat single-range `Range` as safelisted still work;
+  - `@no_range` answers a `GET`/`HEAD` with no `Range` header with **416**, so a browser address-bar visit, crawler, link preview or plain `curl` can't accidentally pull the whole ~200 MB file;
+  - `@bad_range` also answers **416** when the `Range` value is not one of the single-range forms PMTiles uses (`bytes=a-b`, `bytes=a-`, `bytes=-b`), rejecting multi-range and non-`bytes` values.
 
 ```caddyfile
 your.domain.com {
 	root * /usr/share/caddy
+	file_server
 
-	# Allow all CORS
-	header {
-		Access-Control-Allow-Origin  *
-		Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
-		Access-Control-Allow-Headers "*"
-		Access-Control-Expose-Headers "Content-Range, Content-Length, Accept-Ranges"
-		Access-Control-Max-Age 86400
+	# --- PMTiles: india.pmtiles only ---
+	handle /india.pmtiles {
+		# CORS (adjust the origin to match your MapLibre frontend)
+		header {
+			Access-Control-Allow-Origin *
+			Access-Control-Allow-Methods GET,HEAD,OPTIONS
+			Access-Control-Allow-Headers Range,If-Match
+			Access-Control-Expose-Headers ETag,Content-Range,Accept-Ranges
+			Accept-Ranges bytes
+			Cache-Control "public, max-age=86400"
+		}
+
+		# Answer CORS preflight directly
+		@options method OPTIONS
+		respond @options 204
+
+		# Reject any request that does not carry a Range header
+		@no_range {
+			method GET HEAD
+			header !Range
+		}
+		respond @no_range 416 {
+			body "Range header required for india.pmtiles"
+		}
+
+		# Optional but recommended: only accept well-formed byte ranges
+		# (rejects weird / multi-range / non-bytes values)
+		@bad_range {
+			method GET HEAD
+			not header_regexp Range ^bytes=\d+-\d+$
+			not header_regexp Range ^bytes=\d+-$
+			not header_regexp Range ^bytes=-\d+$
+		}
+		respond @bad_range 416 {
+			body "Invalid or unsupported Range header"
+		}
+
+		# Serve the file from the static location
+		root * /usr/share/caddy
+		file_server
 	}
 
-	# Answer CORS preflight directly
-	@options method OPTIONS
-	respond @options 204
-
-	file_server
 }
 ```
+- The `.pmtiles` file must be placed in the site root — `/usr/share/caddy` in this example, matching the `root` directives.
+- The `header` block applies to every response in that route, including `206 Partial Content`, the `204` preflight and the `416` refusals, so `Content-Range` is exposed and MapLibre can read the tiles.
+- Caddy sorts directives itself, so even though the top-level `file_server` is written above the `handle` block, `handle /india.pmtiles` takes precedence for that path and the guards always run.
+- Opening `https://your.domain.com/india.pmtiles` in a browser, or `curl`ing it without a `Range` header, returns **416** by design — that's the download guard working. To check the setup, ask for a byte range instead:
 
-- The `header` block applies to every response, including the `206 Partial Content` range responses, so `Content-Range` is exposed and MapLibre can read the tiles.
+```bash
+curl -sI -H "Range: bytes=0-99" https://your.domain.com/india.pmtiles
+# expect: HTTP/2 206, Content-Range: bytes 0-99/..., Access-Control-Allow-Origin: *
+```
+
 - After editing the Caddyfile, validate and reload Caddy:
 
 ```bash
 # check the config for syntax errors
-caddy validate --config /etc/caddy/Caddyfile
+sudo caddy validate --config /etc/caddy/Caddyfile
 
 # (optional) auto-format the Caddyfile
-caddy fmt --overwrite /etc/caddy/Caddyfile
+sudo caddy fmt --overwrite /etc/caddy/Caddyfile
 
 # apply the new config without dropping connections
-caddy reload --config /etc/caddy/Caddyfile
+sudo caddy reload --config /etc/caddy/Caddyfile
 ```
 
 #### Known issue: the first load can still pull a large chunk
@@ -318,16 +369,13 @@ caddy reload --config /etc/caddy/Caddyfile
 - **We have attempted to solve this by clustering:** `OPTIMIZE_PMTILES="yes"` runs `pmtiles cluster`, which rewrites the directory tree as many smaller leaves, and it can also be applied to an existing archive in place:
 
 ```bash
-# native binary
-pmtiles cluster india.pmtiles
-
-# or Docker (input must be an unclustered archive)
-docker run --rm -v "$(pwd)":/data protomaps/go-pmtiles cluster /data/india.pmtiles
+# cluster the archive (input must be an unclustered archive)
+docker run --rm --user "$(id -u):$(id -g)" -v "$(pwd)":/data protomaps/go-pmtiles cluster /data/india.pmtiles
 
 # inspect the resulting layout (root / leaf / metadata sizes)
-pmtiles show india.pmtiles
+docker run --rm -v "$(pwd)":/data protomaps/go-pmtiles show /data/india.pmtiles
 ```
 
 - **Status: not confirmed resolved.** Testing so far has not shown the clustered archive actually bringing the first-load transfer down to what the smaller directory leaves should imply, so treat this as a known open issue. Further testing is needed: compare first-load and repeat-visit byte counts for clustered vs unclustered archives, and check how the chosen host actually answers the range requests.
 - Mitigations already in place: `metadata: false` in [map4.html](map4/map4.html) (the archive JSON metadata is never fetched) and a hard-coded centre/zoom (the map does not wait for archive metadata).
-- Options still worth testing for repeat visits: a Z/X/Y proxy in front of the archive (`pmtiles serve`, a Caddy `pmtiles_proxy`, a Cloudflare Worker, etc.) so the browser sees ordinary, cacheable tile URLs instead of range requests against one big file.
+- Options still worth testing for repeat visits: a Z/X/Y proxy in front of the archive (`protomaps/go-pmtiles serve` in Docker, a Caddy `pmtiles_proxy`, a Cloudflare Worker, etc.) so the browser sees ordinary, cacheable tile URLs instead of range requests against one big file.
