@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link href='maplibre-gl-6.10.0/maplibre-gl-6.10.0.css' rel='stylesheet' />
+  <style>
+    #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script type="module">
+    // v6 is ESM-only: import the module instead of loading a UMD script.
+    import * as maplibregl from './maplibre-gl-6.10.0/maplibre-gl-6.10.0.mjs';
+
+    // This folder (map3/) is self-contained: copy it as-is to your web host.
+    var BASEURL = 'https://answerquest.github.io/india-vector-maps/map3';
+    // PUT YOUR DEPLOYMENT URL HERE. The webpage's location will be {BASEURL}/map3.html
+
+    if(! location.href.startsWith(BASEURL)) {
+      // if the page is somewhere else, replace with this page's own folder
+      // (works for any sub-path, e.g. http://localhost:8000/map3/map3.html)
+      BASEURL = new URL('.', location.href).href.replace(/\/$/, '');
+      console.log(`BASEURL replaced with: ${BASEURL}`);
+    }
+    var map = new maplibregl.Map({
+      container: 'map',
+      center: [73.8573, 18.5128], // longitude first, latitude later
+      zoom: 12,
+      hash: true,
+      maxZoom: 20,
+      validateStyle: false,
+      zoomLevelsToOverscale: undefined,
+      transformRequest: (url, resourceType) => {
+        let new_url = url.replace("BASEURL", BASEURL);
+        return { url: new_url };
+      },
+    });
+
+    map.setStyle('local1-versatiles/colorful_style.json', {
+      transformStyle: (previousStyle, nextStyle) => {
+        nextStyle.sprite.forEach(s => {
+          s.url = s.url.replace("BASEURL", BASEURL);
+        });
+        return nextStyle;
+      }
+    });
+
+    // adding controls
+    let fullscreen = new maplibregl.FullscreenControl();
+    map.addControl(fullscreen, 'top-right');
+
+    let nav = new maplibregl.NavigationControl({
+      // showCompass: true,
+      // showZoom: true,
+      visualizePitch: true,
+      visualizeRoll: true,
+    });
+    map.addControl(nav, 'top-left');
+
+
+    let marker = new maplibregl.Marker()
+    .setLngLat([73.8573, 18.5128])
+    .addTo(map);
+
+    map.on('style.load', () => {
+      map.setProjection({
+        type: 'globe', // Set projection to globe
+      });
+    });
+  </script>
+</body>
+</html>
